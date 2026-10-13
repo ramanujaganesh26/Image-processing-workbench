@@ -151,7 +151,7 @@ class ControlsPanel(ttk.Frame):
         # 1. Header
         header_frame = ttk.Frame(self, style="Panel.TFrame")
         header_frame.pack(fill="x", padx=10, pady=(8, 4))
-        ttk.Label(header_frame, text="⚙ Processing Controls", style="Header.TLabel").pack(side="left")
+        ttk.Label(header_frame, text="Processing Controls", style="Header.TLabel").pack(side="left")
 
         # 2. Category Selector
         cat_box = ttk.Frame(self, style="Panel.TFrame")
@@ -200,7 +200,7 @@ class ControlsPanel(ttk.Frame):
 
         self.btn_apply = ttk.Button(
             btn_box,
-            text="▶ Apply Operation",
+            text="Apply Operation",
             style="Accent.TButton",
             command=self.trigger_apply,
         )
@@ -211,7 +211,7 @@ class ControlsPanel(ttk.Frame):
         # 6. Theory & Computer Vision Notes
         guide_box = ttk.Frame(self, style="Panel.TFrame")
         guide_box.pack(fill="both", expand=True, padx=10, pady=(0, 8))
-        ttk.Label(guide_box, text="📖 Algorithm Guide & Principles", style="Header.TLabel").pack(anchor="w", pady=(0, 2))
+        ttk.Label(guide_box, text="Algorithm Guide & Principles", style="Header.TLabel").pack(anchor="w", pady=(0, 2))
 
         self.txt_guide = tk.Text(
             guide_box,

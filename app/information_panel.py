@@ -29,12 +29,12 @@ class InformationPanel(ttk.Frame):
 
         # Tab 1: Image Metadata & Pixel Inspector
         self.tab_meta = ttk.Frame(self.notebook, style="Panel.TFrame")
-        self.notebook.add(self.tab_meta, text="ℹ Image Properties & Inspector")
+        self.notebook.add(self.tab_meta, text="Image Properties & Inspector")
         self._build_meta_tab()
 
         # Tab 2: Contour Measurements
         self.tab_contours = ttk.Frame(self.notebook, style="Panel.TFrame")
-        self.notebook.add(self.tab_contours, text="📐 Contour Analysis (0)")
+        self.notebook.add(self.tab_contours, text="Contour Analysis (0)")
         self._build_contours_tab()
 
     def _build_meta_tab(self) -> None:
@@ -126,7 +126,7 @@ class InformationPanel(ttk.Frame):
         if self.on_export_csv:
             btn_export = ttk.Button(
                 top_bar,
-                text="📊 Export CSV...",
+                text="Export CSV...",
                 style="Accent.TButton",
                 command=self.on_export_csv,
             )
@@ -229,7 +229,7 @@ class InformationPanel(ttk.Frame):
 
         count = len(contours)
         self.lbl_cnt_count.config(text=f"{count} contours detected")
-        self.notebook.tab(self.tab_contours, text=f"📐 Contour Analysis ({count})")
+        self.notebook.tab(self.tab_contours, text=f"Contour Analysis ({count})")
 
         for c in contours:
             bbox_str = f"({c.bbox_x}, {c.bbox_y}, {c.bbox_w}, {c.bbox_h})"

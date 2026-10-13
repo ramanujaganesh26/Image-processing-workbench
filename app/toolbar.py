@@ -40,21 +40,21 @@ class Toolbar(ttk.Frame):
         # File operations group
         self.btn_open = ttk.Button(
             self,
-            text="📁 Open (Ctrl+O)",
+            text="Open (Ctrl+O)",
             command=self.on_open,
         )
         self.btn_open.pack(side="left", padx=(6, 2), pady=4)
 
         self.btn_save = ttk.Button(
             self,
-            text="💾 Save (Ctrl+S)",
+            text="Save (Ctrl+S)",
             command=self.on_save,
         )
         self.btn_save.pack(side="left", padx=2, pady=4)
 
         self.btn_save_as = ttk.Button(
             self,
-            text="💾 Save As...",
+            text="Save As...",
             command=self.on_save_as,
         )
         self.btn_save_as.pack(side="left", padx=2, pady=4)
@@ -66,14 +66,14 @@ class Toolbar(ttk.Frame):
         # Pipeline actions
         self.btn_reset = ttk.Button(
             self,
-            text="↺ Reset (Ctrl+R)",
+            text="Reset (Ctrl+R)",
             command=self.on_reset,
         )
         self.btn_reset.pack(side="left", padx=2, pady=4)
 
         self.btn_chain = ttk.Button(
             self,
-            text="🔗 Chain as Input",
+            text="Chain as Input",
             command=self.on_chain_source,
         )
         self.btn_chain.pack(side="left", padx=2, pady=4)
@@ -85,7 +85,7 @@ class Toolbar(ttk.Frame):
         # View actions
         self.btn_fit = ttk.Button(
             self,
-            text="⛶ Fit to View",
+            text="Fit to View",
             command=self.on_fit_view,
         )
         self.btn_fit.pack(side="left", padx=2, pady=4)
@@ -99,7 +99,7 @@ class Toolbar(ttk.Frame):
 
         self.btn_toggle_view = ttk.Button(
             self,
-            text="⇄ Toggle View",
+            text="Toggle View",
             command=self.on_toggle_view,
         )
         self.btn_toggle_view.pack(side="left", padx=2, pady=4)
@@ -111,7 +111,7 @@ class Toolbar(ttk.Frame):
         # Data export
         self.btn_csv = ttk.Button(
             self,
-            text="📊 Export CSV",
+            text="Export CSV",
             command=self.on_export_csv,
         )
         self.btn_csv.pack(side="left", padx=2, pady=4)
