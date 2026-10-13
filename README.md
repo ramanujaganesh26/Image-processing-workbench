@@ -1,179 +1,339 @@
-# Image Processing Workbench
+<div align="center">
 
-An engineering-grade desktop application for learning, experimenting with, and demonstrating fundamental computer vision algorithms using **Python**, **OpenCV**, and **NumPy**.
+# 🖼️ Image Processing Workbench
 
-Built specifically for computer vision students, researchers, and robotics software engineers transitioning from foundational algorithms to advanced perception systems.
+### *An Engineering-Grade Desktop Suite for Computer Vision & Robotics Perception*
 
----
+[![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-5.0+-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
+[![NumPy](https://img.shields.io/badge/NumPy-2.0+-013243?style=for-the-badge&logo=numpy&logoColor=white)](https://numpy.org/)
+[![Pillow](https://img.shields.io/badge/Pillow-12.0+-8A2BE2?style=for-the-badge&logo=python&logoColor=white)](https://python-pillow.org/)
+[![Tests](https://img.shields.io/badge/pytest-26%20Passed-10B981?style=for-the-badge&logo=pytest&logoColor=white)](https://docs.pytest.org/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://microsoft.com/windows)
+[![Architecture](https://img.shields.io/badge/Architecture-Modular%20MVC-blue?style=for-the-badge)](#-system-architecture)
 
-## 1. Overview
-
-The **Image Processing Workbench** is a native desktop application designed to bridge theoretical computer vision concepts with interactive, real-time experimentation. Unlike black-box pipelines or command-line scripts, this workbench allows engineers to:
-
-- Inspect pixel-level operations and color channels.
-- Interactively tune hyperparameters with live visual feedback.
-- Compare processed results side-by-side with original inputs.
-- Measure algorithm latency in milliseconds with sub-millisecond precision.
-- Extract geometric contour features and export measurements directly to CSV.
-
----
-
-## 2. Key Features
-
-- **Side-by-Side Dual Viewport**: Real-time comparison between the pristine original image and processed output with aspect-ratio preservation and letterbox handling.
-- **Interactive Pixel Inspector**: Click any point on either canvas to view exact original image coordinates `(X, Y)`, color channel intensities (BGR, RGB, Hex), and a live color swatch.
-- **High-Precision Performance Profiling**: Algorithm execution latency measured in milliseconds (`ms`) isolated from UI rendering and disk I/O overhead.
-- **Robust Image I/O**: Full support for PNG, JPEG, BMP, and TIFF files, including full Unicode path support on Windows.
-- **Pipeline State & Chaining**: Non-destructive processing ensures the original image is never overwritten. Users can optionally chain operations by setting the processed result as the new source input.
-- **Contour Measurement & Export**: Calculates Area, Perimeter (arc length), Bounding Box, Centroid moments ($M_{10}/M_{00}$, $M_{01}/M_{00}$), Aspect Ratio, and Extent, with one-click export to CSV.
-- **Dark Neutral Engineering Interface**: Inspired by scientific workbenches, featuring high-contrast typography, restrained color accents, and full keyboard shortcut support.
+<p align="center">
+  <b>A modular, native desktop workbench for interactive experimentation, quantitative inspection, side-by-side comparison, and sub-millisecond performance profiling of classical computer vision algorithms.</b>
+</p>
 
 ---
 
-## 3. Supported Computer Vision Algorithms
+</div>
 
-The application organizes algorithms into 6 core categories:
+## 🎬 Live Application Demonstration
 
-### 1. Basic Transformations
-* **Grayscale Conversion**: Converts 3-channel BGR images to 1-channel luminance using $Y = 0.299R + 0.587G + 0.114B$.
-* **Spatial Resizing**: Scales image dimensions with an option to preserve the aspect ratio, utilizing area interpolation for downsampling and bilinear interpolation for upsampling.
-* **Geometric Flipping**: Horizontal, vertical, or combined flipping.
-* **Orthogonal Rotation**: 90°, 180°, and 270° clockwise rotations.
-
-### 2. Filtering
-* **Gaussian Blur**: 2D Gaussian convolution kernel ($G(x,y) = \frac{1}{2\pi\sigma^2}\exp(-\frac{x^2+y^2}{2\sigma^2})$) for high-frequency noise suppression while maintaining edge continuity.
-* **Median Blur**: Non-linear filtering replacing center pixels with neighborhood medians; highly effective at removing impulse ("salt-and-pepper") noise without softening sharp edges.
-
-### 3. Thresholding
-* **Standard Binary & Binary Inverse**: Segmentation against a user-configurable cut-off threshold ($dst(x,y) = \text{max\_val}$ if $src(x,y) > T$ else $0$).
-* **Otsu's Global Thresholding**: Automatically determines optimal threshold by minimizing intra-class variance ($\sigma_w^2(t) = \omega_0(t)\sigma_0^2(t) + \omega_1(t)\sigma_1^2(t)$) on bimodal histograms.
-* **Adaptive Mean & Gaussian Thresholding**: Computes local thresholds across pixel neighborhoods to handle uneven scene illumination and shadows.
-
-### 4. Edge Detection
-* **Canny Edge Detection**: Multi-stage algorithm featuring Gaussian smoothing, Sobel gradient computation, non-maximum suppression (NMS), and hysteresis thresholding with optional pre-filtering.
-
-### 5. Contour Analysis
-* **Topological Extraction**: Suzuki & Abe border-following algorithm supporting External (`RETR_EXTERNAL`), All (`RETR_LIST`), and Hierarchical (`RETR_TREE`) modes.
-* **Geometric Feature Extraction**:
-  - **Area**: Contour area via Green's theorem (`cv2.contourArea`).
-  - **Perimeter**: Closed arc length (`cv2.arcLength`).
-  - **Bounding Box**: Upright bounding rectangle $(x, y, w, h)$.
-  - **Centroid**: First-order spatial moments ($c_x = \frac{m_{10}}{m_{00}}$, $c_y = \frac{m_{01}}{m_{00}}$) with zero-division protection.
-  - **Aspect Ratio**: Width-to-height ratio ($\frac{w}{h}$).
-  - **Extent**: Contour area relative to bounding box area ($\frac{\text{Area}}{w \times h}$).
-* **Visualization & CSV Export**: Customizable visualization overlays for contours (green), bounding boxes (cyan), and centroids/indices (red), with tabular viewing and CSV export.
-
-### 6. Mathematical Morphology
-* **Erosion**: Computes local neighborhood minimum; shrinks foreground structures and removes small background speckles.
-* **Dilation**: Computes local neighborhood maximum; expands foreground structures and bridges micro-fractures.
-* **Opening**: Erosion followed by dilation; eliminates small foreground noise artifacts.
-* **Closing**: Dilation followed by erosion; closes dark holes and fissures inside foreground objects.
-* **Morphological Gradient**: Difference between dilation and erosion; highlights boundary gradients.
-* **Top-Hat**: Difference between input and its opening; isolates bright elements smaller than the structuring element.
-* **Black-Hat**: Difference between closing and the input; isolates dark elements smaller than the structuring element.
-* **Structuring Elements**: Configurable kernel dimensions (width/height) and geometries (Rectangular, Elliptical, Cross).
+<div align="center">
+  <video src="Output_data/Screen_recorded.mp4" controls="controls" width="100%" style="border-radius: 10px; border: 1px solid #374151; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
+    <source src="Output_data/Screen_recorded.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
 
 ---
 
-## 4. Technology Stack
+## 📑 Table of Contents
 
-- **Language**: Python 3.11+ / Python 3.12
-- **Computer Vision**: OpenCV (`opencv-python` >= 4.8.0)
-- **Numerical Computing**: NumPy (`numpy` >= 1.24.0)
-- **Desktop GUI**: Python standard Tkinter & ttk
-- **Image Rendering**: Pillow (`Pillow` >= 10.0.0)
-- **Testing**: pytest (`pytest` >= 7.0.0)
+- [1. Executive Overview](#1-executive-overview)
+- [2. System Architecture & Engineering Design](#2-system-architecture--engineering-design)
+- [3. Categorized Algorithm Deep Dive & Visual Gallery](#3-categorized-algorithm-deep-dive--visual-gallery)
+  - [Category 1: Basic Transformations](#category-1-basic-transformations)
+  - [Category 2: Filtering & Noise Suppression](#category-2-filtering--noise-suppression)
+  - [Category 3: Global & Adaptive Thresholding](#category-3-global--adaptive-thresholding)
+  - [Category 4: Canny Edge Detection](#category-4-canny-edge-detection)
+  - [Category 5: Topological Contour Analysis](#category-5-topological-contour-analysis)
+  - [Category 6: Mathematical Morphology](#category-6-mathematical-morphology)
+- [4. Core Engineering Features](#4-core-engineering-features)
+- [5. Project Directory Structure](#5-project-directory-structure)
+- [6. Installation & Execution Guide](#6-installation--execution-guide)
+- [7. Keyboard Shortcuts](#7-keyboard-shortcuts)
+- [8. Test Suite & Verification Matrix](#8-test-suite--verification-matrix)
 
 ---
 
-## 5. Project Architecture
+## 1. Executive Overview
+
+In autonomous robotics, industrial inspection, and embedded perception, mastering fundamental computer vision algorithms before introducing heavy neural networks is critical. **Image Processing Workbench** provides a transparent, zero-black-box software laboratory where every mathematical operation can be observed, adjusted in real time, and measured with high precision.
+
+### Key Capabilities
+- **Dual-Canvas Comparison View**: Simultaneous display of pristine input and processed output with responsive aspect-ratio letterboxing.
+- **Precision Pixel Inspector**: Click any point on preview canvases to map canvas pixel space back to exact NumPy array indices, displaying channel values (BGR, RGB, Hex) and live color swatches.
+- **Hardware-Isolated Execution Timer**: Microsecond-resolution execution profiling (`time.perf_counter`) measuring algorithmic computation independently of Tkinter rendering and file I/O.
+- **Non-Destructive State Management**: Original image arrays are strictly read-only; every operation executes idempotently from base inputs, with optional pipeline chaining.
+- **Contour Feature Extraction**: Automatic Suzuki-Abe border following with instantaneous calculation of geometric properties (Area, Perimeter, Bounding Box, Moments Centroid, Aspect Ratio, Extent) and one-click CSV export.
+
+---
+
+## 2. System Architecture & Engineering Design
+
+The application follows a strictly decoupled Model-View-Controller (MVC) architectural pattern, separating computational vision logic from the desktop graphical presentation layer.
+
+```mermaid
+graph TD
+    subgraph UI_Presentation ["🖥️ UI Presentation Layer (Tkinter / ttk)"]
+        MW[MainWindow Coordinator]
+        TB[Top Toolbar]
+        CP[Controls Panel & Reactive Sliders]
+        IV[Workspace Image Viewer - Dual Canvas]
+        IP[Information Panel - Metadata & Treeview]
+        SB[Status Bar - Metrics & Badges]
+    end
+
+    subgraph Pipeline_Coordinator ["⚙️ Pipeline & State Management Layer"]
+        PP[ProcessingPipeline State Controller]
+        ET[ExecutionTimer Context Manager]
+        PI[Pixel Inspector Coordinate Mapper]
+    end
+
+    subgraph Vision_Core ["🔬 Pure Computer Vision Core (OpenCV / NumPy)"]
+        IP_MOD[image_processing.py<br/>Filters, Transforms, Edges, Morphology]
+        CA_MOD[contour_analysis.py<br/>Contours, Moments, Bounding Boxes, Metrics]
+        IO_MOD[image_io.py<br/>Unicode-Safe Buffer Decoding & Encoding]
+    end
+
+    subgraph Data_Storage ["💾 Filesystem & Output"]
+        FS_IN[(Input Images: PNG, JPEG, BMP, TIFF)]
+        FS_OUT[(Processed Images & CSV Spreadsheets)]
+    end
+
+    MW --> TB
+    MW --> CP
+    MW --> IV
+    MW --> IP
+    MW --> SB
+
+    CP -->|Debounced Events| PP
+    TB -->|File / View Actions| PP
+    IV -->|Click Events| PI
+    PI -->|Array Coordinates| IP
+
+    PP --> ET
+    PP --> IP_MOD
+    PP --> CA_MOD
+    PP --> IO_MOD
+
+    IO_MOD <--> FS_IN
+    IO_MOD --> FS_OUT
+    CA_MOD -->|CSV Export| FS_OUT
+```
+
+### Architectural Highlights
+
+1. **Non-Destructive Pipeline**: The loaded image is deeply copied upon arrival. The `original_image` array is immutable during interactive sessions. Any algorithm parameter tweak immediately dispatches against the pristine base array, preventing cumulative degradation.
+2. **Event Debouncing**: Interactive sliders employ a 100 ms debounce timer (`after_cancel` / `after`), ensuring fluid parameter adjustments without frame stutter or event queue flooding.
+3. **Letterbox-Aware Coordinate Mapping**: The canvas accurately translates click positions $(X_c, Y_c)$ through scale factors and symmetric letterbox offsets $(\Delta X, \Delta Y)$ to locate exact NumPy array indices $(X_{img}, Y_{img})$ regardless of window dimensions.
+4. **Unicode Path Robustness**: Windows systems often fail when calling standard `cv2.imread()` on paths containing accents or non-ASCII characters. The workbench streams file bytes into a `numpy.uint8` buffer and decodes via `cv2.imdecode()`, ensuring 100% Unicode path compliance.
+
+---
+
+## 3. Categorized Algorithm Deep Dive & Visual Gallery
+
+---
+
+### Category 1: Basic Transformations
+
+Spatial transformations and color-space reductions are standard preprocessing stages in sensor pipelines (e.g., camera mounting compensation, optical flow downsampling).
+
+<div align="center">
+  <img src="Output_data/Screen_shots/Category_1_Basic_Transformations.png" alt="Category 1: Basic Transformations" width="95%" style="border-radius: 8px; border: 1px solid #374151; box-shadow: 0 4px 12px rgba(0,0,0,0.3);" />
+</div>
+
+- **Grayscale Conversion**: Uses standard ITU-R BT.601 perceptual luminance weights:
+  $$\text{Luminance} = 0.299 \cdot R + 0.587 \cdot G + 0.114 \cdot B$$
+- **Spatial Resizing**: Computes aspect-ratio bounded scaling factors ($\min(\frac{W_t}{W_o}, \frac{H_t}{H_o})$) and chooses `INTER_AREA` for downsampling or `INTER_LINEAR` for upsampling.
+- **Geometric Flipping**: Inverts pixel matrices across horizontal axis ($code = 1$), vertical axis ($code = 0$), or dual axes ($code = -1$).
+- **Orthogonal Rotations**: Exact 90°, 180°, and 270° clockwise rotations without interpolation blurring artifacts.
+
+---
+
+### Category 2: Filtering & Noise Suppression
+
+Spatial convolution filters attenuate sensor noise and speckle prior to feature extraction.
+
+<div align="center">
+  <img src="Output_data/Screen_shots/Category_2_Filtering.png" alt="Category 2: Filtering" width="95%" style="border-radius: 8px; border: 1px solid #374151; box-shadow: 0 4px 12px rgba(0,0,0,0.3);" />
+</div>
+
+- **Gaussian Blur**: 2D isotropic convolution kernel providing smooth frequency attenuation:
+  $$G(x, y) = \frac{1}{2\pi\sigma^2} \exp\left(-\frac{x^2 + y^2}{2\sigma^2}\right)$$
+- **Median Blur**: Non-linear rank-order filter replacing each pixel with the statistical median of its neighborhood:
+  $$\text{dst}(x, y) = \text{median}\left(\{\text{src}(x+i, y+j) \mid (i, j) \in K\}\right)$$
+  *Robotics Note*: Demonstrates complete eradication of salt-and-pepper impulse noise where linear Gaussian filters merely smudge corrupt pixels.
+
+---
+
+### Category 3: Global & Adaptive Thresholding
+
+Image binarization isolates foreground structures from background scene data.
+
+<div align="center">
+  <img src="Output_data/Screen_shots/Category_3_Thresholding.png" alt="Category 3: Thresholding" width="95%" style="border-radius: 8px; border: 1px solid #374151; box-shadow: 0 4px 12px rgba(0,0,0,0.3);" />
+</div>
+
+- **Binary & Binary Inverse**: Fixed global thresholding against user-selected cutoff $T$:
+  $$\text{dst}(x,y) = \begin{cases} \text{max\_val} & \text{if } \text{src}(x,y) > T \\ 0 & \text{otherwise} \end{cases}$$
+- **Otsu's Global Thresholding**: Iterates across gray-level histograms to determine the optimal threshold $T^*$ that minimizes intra-class variance:
+  $$\sigma_w^2(t) = \omega_0(t)\sigma_0^2(t) + \omega_1(t)\sigma_1^2(t)$$
+- **Adaptive Mean & Gaussian Thresholding**: Computes localized thresholds $T(x,y)$ across neighborhood blocks, subtracting constant $C$ to overcome illumination gradients and harsh shadows.
+
+---
+
+### Category 4: Canny Edge Detection
+
+Canny's optimal edge detector extracts structural boundaries through a robust four-stage pipeline.
+
+<div align="center">
+  <img src="Output_data/Screen_shots/Category_4_Edge_Detection.png" alt="Category 4: Edge Detection" width="95%" style="border-radius: 8px; border: 1px solid #374151; box-shadow: 0 4px 12px rgba(0,0,0,0.3);" />
+</div>
+
+1. **Gaussian Pre-filtering**: Attenuates high-frequency sensor noise.
+2. **Sobel Gradient Operator**: Computes horizontal $G_x$ and vertical $G_y$ gradients, deriving magnitude $|G| = \sqrt{G_x^2 + G_y^2}$ and direction $\theta = \arctan(G_y / G_x)$.
+3. **Non-Maximum Suppression (NMS)**: Thins edge ridges by suppressing pixels not at the local gradient maximum.
+4. **Hysteresis Thresholding**: Dual-threshold classification preserving strong edges ($> T_{\text{upper}}$) and keeping weak edges ($T_{\text{lower}} \le \text{pixel} \le T_{\text{upper}}$) only if connected to strong edges.
+
+---
+
+### Category 5: Topological Contour Analysis
+
+Detects connected components and computes geometric feature vectors for downstream robotic grasping and shape classification.
+
+<div align="center">
+  <img src="Output_data/Screen_shots/Category_5_Contour_Analysis.png" alt="Category 5: Contour Analysis" width="95%" style="border-radius: 8px; border: 1px solid #374151; box-shadow: 0 4px 12px rgba(0,0,0,0.3);" />
+</div>
+
+- **Suzuki & Abe Border Following**: Extracts hierarchical topological relationships (`RETR_EXTERNAL`, `RETR_LIST`, `RETR_TREE`).
+- **Computed Geometric Features**:
+  | Feature Metric | Mathematical Definition | Robotics Application |
+  | :--- | :--- | :--- |
+  | **Contour Area** | Green's Theorem: $A = \frac{1}{2} \oint (x\,dy - y\,dx)$ | Object sizing & noise rejection |
+  | **Arc Perimeter** | Closed contour path length: $P = \oint ds$ | Compactness metric |
+  | **Bounding Box** | Minimum upright envelope: $(x, y, w, h)$ | Region of Interest (ROI) extraction |
+  | **Centroid** | Moments: $c_x = \frac{m_{10}}{m_{00}}, c_y = \frac{m_{01}}{m_{00}}$ | Robot gripper alignment |
+  | **Aspect Ratio** | Ratio of width to height: $\frac{w}{h}$ | Orientation & part classification |
+  | **Extent** | Object fill ratio: $\frac{\text{Area}}{w \times h}$ | Structural rectangularity score |
+- **CSV Data Export**: Complete measurement tables export to standard CSV format with a single click.
+
+---
+
+### Category 6: Mathematical Morphology
+
+Set-theoretic operations utilizing configurable structuring elements (kernels) to refine segmented binary masks.
+
+<div align="center">
+  <img src="Output_data/Screen_shots/Category_6_Morphological_Operations.png" alt="Category 6: Morphological Operations" width="95%" style="border-radius: 8px; border: 1px solid #374151; box-shadow: 0 4px 12px rgba(0,0,0,0.3);" />
+</div>
+
+- **Erosion ($A \ominus B$)**: Replaces center pixel with local minimum; eliminates isolated bright speckles and detaches weak bridges.
+- **Dilation ($A \oplus B$)**: Replaces center pixel with local maximum; fills internal voids and repairs broken contours.
+- **Opening ($A \circ B = (A \ominus B) \oplus B$)**: Erosion followed by dilation; eliminates small foreground noise without altering overall object size.
+- **Closing ($A \bullet B = (A \oplus B) \ominus B$)**: Dilation followed by erosion; bridges small fissures and seals dark holes.
+- **Morphological Gradient**: $(A \oplus B) - (A \ominus B)$; extracts outer structural boundaries.
+- **Top-Hat & Black-Hat**: Highlights elements smaller than the structuring element on non-uniform backgrounds.
+
+---
+
+## 4. Core Engineering Features
+
+| Feature | Engineering Implementation | Benefit |
+| :--- | :--- | :--- |
+| **Interactive Pixel Inspector** | Canvas inverse projection mapping $(X_c, Y_c) \to (X_{arr}, Y_{arr})$ | Immediate pixel-level numerical feedback |
+| **Microsecond Profiler** | `time.perf_counter()` context manager wrapped around algorithms | Hardware benchmarking isolated from rendering overhead |
+| **Unicode Path Engine** | `cv2.imdecode` & `cv2.imencode` over binary byte buffers | Eliminates path encoding crashes on Windows |
+| **Chained Processing** | Optional pipeline source promotion (`use_processed_as_source`) | Multi-stage algorithm pipelines (e.g. Blur $\to$ Edge $\to$ Morphology) |
+| **Dark Neutral Theme** | Custom-engineered Tkinter `ttk.Style` with `clam` engine | High-contrast, glare-free laboratory dark environment |
+
+---
+
+## 5. Project Directory Structure
 
 ```
 ImageProcessingWorkbench/
-├── main.py                  # Desktop application entry point
-├── requirements.txt         # Core dependencies
-├── README.md                # System documentation and user guide
-├── .gitignore               # Version control ignore definitions
+├── main.py                            # Desktop application entry point
+├── requirements.txt                   # Dependency definitions
+├── README.md                          # Engineering documentation
+├── .gitignore                         # Git tracking rules
 │
-├── app/                     # GUI layer (Tkinter / ttk)
+├── core/                              # Computational Vision Core
+│   ├── __init__.py                    # Public API exports
+│   ├── performance.py                 # ExecutionTimer context manager
+│   ├── image_io.py                    # Unicode-safe image encoder/decoder & metadata
+│   ├── image_processing.py            # Standalone, pure CV algorithms
+│   ├── contour_analysis.py            # Contour metrics, visualizer & CSV export
+│   └── processing_pipeline.py         # Pipeline coordinator & state manager
+│
+├── app/                               # Presentation Layer (Tkinter / ttk)
 │   ├── __init__.py
-│   ├── application.py       # Application initialization and lifecycle
-│   ├── main_window.py       # Layout coordination and keyboard shortcuts
-│   ├── toolbar.py           # Quick-action top toolbar
-│   ├── image_viewer.py      # Dual-canvas viewport with aspect-ratio scaling
-│   ├── controls_panel.py    # Algorithm selectors and interactive parameters
-│   ├── information_panel.py # Image metadata, pixel inspector, and contour table
-│   ├── status_bar.py        # Real-time metrics and state indicators
-│   └── theme.py             # Dark neutral design system and ttk styles
+│   ├── theme.py                       # Dark neutral engineering theme & palette
+│   ├── application.py                 # High-DPI awareness & application lifecycle
+│   ├── main_window.py                 # Window layout, shortcuts & event coordination
+│   ├── toolbar.py                     # Top workflow action bar
+│   ├── image_viewer.py                # Dual canvas with letterboxed aspect-ratio scaling
+│   ├── controls_panel.py              # Reactive parameter controls & algorithm notes
+│   ├── information_panel.py           # Metadata properties & contour Treeview
+│   └── status_bar.py                  # Real-time metrics and status indicators
 │
-├── core/                    # Pure computer vision processing core
-│   ├── __init__.py
-│   ├── performance.py       # High-resolution execution timing utilities
-│   ├── image_io.py          # Safe image loading/saving with Unicode support
-│   ├── image_processing.py  # Filters, thresholds, edge detectors, and morphology
-│   ├── contour_analysis.py  # Contour detection, geometric metrics, and CSV export
-│   └── processing_pipeline.py # State management, execution dispatch, and history
+├── tests/                             # Automated Test Suite (pytest)
+│   ├── test_image_io.py               # Decoding, encoding, unicode, and error handling
+│   ├── test_image_processing.py       # Filters, transforms, thresholds, canny, immutability
+│   ├── test_contours.py               # Shape metrics, moments, CSV generation
+│   ├── test_morphology.py             # Morphology operations & kernel shapes
+│   ├── test_pipeline.py               # State management, chaining, and reset
+│   └── test_gui.py                    # Automated GUI lifecycle & event simulation
 │
-├── tests/                   # Automated pytest suite
-│   ├── test_image_io.py     # Image decoding, encoding, and metadata tests
-│   ├── test_image_processing.py # Transform, filter, threshold, and edge tests
-│   ├── test_contours.py     # Geometric features and CSV export tests
-│   ├── test_morphology.py   # Morphological operations and structuring element tests
-│   ├── test_pipeline.py     # Pipeline state and chaining tests
-│   └── test_gui.py          # Headless GUI initialization and event tests
+├── images/                            # Synthetic Test Assets
+│   ├── geometric_shapes.png           # Multi-color shapes for contour analysis
+│   ├── noisy_sample.png               # Impulse noise for filter evaluation
+│   ├── uneven_lighting_doc.png        # Gradient shadow document for adaptive thresholding
+│   └── rotary_encoder_pattern.png     # Radial pattern for Canny edge tuning
 │
-├── images/                  # Built-in synthetic test images
-│   ├── geometric_shapes.png # Multi-color geometric shapes for contour analysis
-│   ├── noisy_sample.png     # Salt-and-pepper noise for filter testing
-│   ├── uneven_lighting_doc.png # Document with gradient shadow for adaptive thresholding
-│   └── rotary_encoder_pattern.png # High-contrast radial pattern for Canny edge testing
-│
-└── output/                  # Default directory for saved processed images and CSVs
+└── Output_data/                       # Demonstrations & Artifacts
+    ├── Screen_recorded.mp4            # Live desktop session demonstration video
+    └── Screen_shots/                  # Categorized workbench screenshots
+        ├── Category_1_Basic_Transformations.png
+        ├── Category_2_Filtering.png
+        ├── Category_3_Thresholding.png
+        ├── Category_4_Edge_Detection.png
+        ├── Category_5_Contour_Analysis.png
+        └── Category_6_Morphological_Operations.png
 ```
 
 ---
 
-## 6. Installation & Execution (Windows 10/11)
+## 6. Installation & Execution Guide
 
 ### Prerequisites
-- Python 3.11 or Python 3.12 installed on your system.
+- Python **3.11** or **3.12** installed on Windows 10 / 11.
 - `pip` package manager.
 
-### Step 1: Create a Virtual Environment (Recommended)
-
-Open PowerShell or Command Prompt in the project folder:
+### 1. Clone & Set Up Virtual Environment
 
 ```powershell
+# Clone the repository
+git clone https://github.com/ramanujaganesh26/Image-processing-workbench.git
+cd Image-processing-workbench
+
+# Create virtual environment
 python -m venv venv
-```
 
-Activate the virtual environment:
-
-```powershell
-# PowerShell:
+# Activate virtual environment
+# In PowerShell:
 .\venv\Scripts\Activate.ps1
-
-# Command Prompt:
+# In Command Prompt:
 .\venv\Scripts\activate.bat
 ```
 
-### Step 2: Install Dependencies
+### 2. Install Dependencies
 
 ```powershell
 pip install -r requirements.txt
 ```
 
-### Step 3: Run the Application
-
-Launch the desktop workbench:
+### 3. Launch the Application
 
 ```powershell
 python main.py
 ```
 
-### Step 4: Run the Test Suite
-
-Execute the automated test suite with pytest:
+### 4. Run Automated Test Suite
 
 ```powershell
 python -m pytest -v
@@ -183,42 +343,57 @@ python -m pytest -v
 
 ## 7. Keyboard Shortcuts
 
-| Shortcut | Action |
+| Shortcut | Description |
 | :--- | :--- |
-| **Ctrl + O** | Open an image file from the filesystem |
-| **Ctrl + S** | Save processed image to `output/` |
-| **Ctrl + Shift + S** | Save processed image as a new file |
-| **Ctrl + R** | Reset processing back to original image |
-| **Ctrl + Q** | Exit application |
+| **Ctrl + O** | Open an image from filesystem (PNG, JPEG, BMP, TIFF) |
+| **Ctrl + S** | Save processed image to `output/` directory |
+| **Ctrl + Shift + S** | Save processed image with custom destination and format |
+| **Ctrl + R** | Reset processed image back to pristine original input |
+| **Ctrl + Q** | Cleanly terminate application |
 
 ---
 
-## 8. Built-in Sample Images
+## 8. Test Suite & Verification Matrix
 
-The project includes pre-generated synthetic test images in `images/` tailored for experimentation:
+The repository includes a comprehensive 26-test automated suite executed via `pytest`:
 
-1. `images/geometric_shapes.png`: Colorful rectangles, circles with holes, and triangles on a dark background. Ideal for **Contour Detection**, **Aspect Ratio**, and **Pixel Inspection**.
-2. `images/noisy_sample.png`: High-density salt-and-pepper impulse noise. Demonstrates the superiority of **Median Blur** over **Gaussian Blur** for impulse noise reduction.
-3. `images/uneven_lighting_doc.png`: Document text with an illumination gradient (shadow). Demonstrates why **Adaptive Thresholding** succeeds where global **Binary/Otsu Thresholding** fails.
-4. `images/rotary_encoder_pattern.png`: High-contrast structural geometry with concentric rings and radial ticks. Ideal for **Canny Edge Detection** hysteresis parameter tuning.
+```
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0
+collected 26 items
+
+tests/test_contours.py::test_contour_detection_synthetic_shapes PASSED   [  3%]
+tests/test_contours.py::test_contour_visualization_drawing PASSED        [  7%]
+tests/test_contours.py::test_export_contours_to_csv PASSED               [ 11%]
+tests/test_gui.py::test_application_initialization PASSED                [ 15%]
+tests/test_gui.py::test_gui_image_loading_and_operation_workflow PASSED [ 19%]
+tests/test_image_io.py::test_save_and_load_color_image PASSED            [ 23%]
+tests/test_image_io.py::test_save_and_load_grayscale_image PASSED        [ 26%]
+tests/test_image_io.py::test_load_invalid_path PASSED                    [ 30%]
+tests/test_image_io.py::test_load_unsupported_format PASSED              [ 34%]
+tests/test_image_io.py::test_load_empty_file PASSED                      [ 38%]
+tests/test_image_io.py::test_unicode_path_support PASSED                 [ 42%]
+tests/test_image_io.py::test_get_image_metadata PASSED                   [ 46%]
+tests/test_image_processing.py::test_grayscale_conversion PASSED         [ 50%]
+tests/test_image_processing.py::test_gaussian_and_median_blur PASSED     [ 53%]
+tests/test_image_processing.py::test_standard_thresholding PASSED        [ 57%]
+tests/test_image_processing.py::test_otsu_thresholding PASSED            [ 61%]
+tests/test_image_processing.py::test_adaptive_threshold_constraints PASSED [ 65%]
+tests/test_image_processing.py::test_canny_edge_detection PASSED         [ 69%]
+tests/test_image_processing.py::test_basic_transformations PASSED        [ 73%]
+tests/test_image_processing.py::test_original_image_not_modified PASSED  [ 76%]
+tests/test_morphology.py::test_erosion_and_dilation PASSED               [ 80%]
+tests/test_morphology.py::test_opening_and_closing PASSED                [ 84%]
+tests/test_morphology.py::test_morphology_kernel_shapes_and_ops PASSED   [ 88%]
+tests/test_morphology.py::test_morphology_invalid_parameters PASSED      [ 92%]
+tests/test_pipeline.py::test_pipeline_lifecycle PASSED                   [ 96%]
+tests/test_pipeline.py::test_pipeline_chaining PASSED                    [100%]
+
+============================= 26 passed in 1.94s ==============================
+```
 
 ---
 
-## 9. Troubleshooting
-
-* **File contains non-English characters in path**:
-  The application utilizes binary stream buffer decoding (`np.frombuffer` + `cv2.imdecode`) rather than standard `cv2.imread`, fully supporting Unicode folder names and paths on Windows.
-* **Image appears black or empty**:
-  Verify the image file is not corrupt and has a non-zero byte size. Supported extensions: `.png`, `.jpg`, `.jpeg`, `.bmp`, `.tiff`, `.tif`.
-* **Tkinter Window scaling looks blurry on High-DPI screens**:
-  The workbench automatically requests per-monitor DPI awareness from the Windows shell (`ctypes.windll.shcore.SetProcessDpiAwareness(1)`).
-
----
-
-## 10. Educational Roadmap & Next Steps
-
-This workbench establishes a rigorous understanding of classical computer vision. Recommended next steps for robotics perception engineers:
-1. Corner and Keypoint Detectors (Harris Corner, FAST, ORB).
-2. Spatial Transformations and Homography (Perspective Warping).
-3. Optical Flow (Lucas-Kanade) for robot velocity estimation.
-4. Classical Object Classification via Histogram of Oriented Gradients (HOG) + Support Vector Machines (SVM).
+<div align="center">
+  <sub>Built for computer vision students, researchers, and robotics software engineers.</sub>
+</div>
