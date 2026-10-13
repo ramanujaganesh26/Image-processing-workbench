@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🖼️ Image Processing Workbench
+# Image Processing Workbench
 
 ### *An Engineering-Grade Desktop Suite for Computer Vision & Robotics Perception*
 
@@ -10,7 +10,7 @@
 [![Pillow](https://img.shields.io/badge/Pillow-12.0+-8A2BE2?style=for-the-badge&logo=python&logoColor=white)](https://python-pillow.org/)
 [![Tests](https://img.shields.io/badge/pytest-26%20Passed-10B981?style=for-the-badge&logo=pytest&logoColor=white)](https://docs.pytest.org/)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://microsoft.com/windows)
-[![Architecture](https://img.shields.io/badge/Architecture-Modular%20MVC-blue?style=for-the-badge)](#-system-architecture)
+[![Architecture](https://img.shields.io/badge/Architecture-Modular%20MVC-blue?style=for-the-badge)](#2-system-architecture--engineering-design)
 
 <p align="center">
   <b>A modular, native desktop workbench for interactive experimentation, quantitative inspection, side-by-side comparison, and sub-millisecond performance profiling of classical computer vision algorithms.</b>
@@ -20,7 +20,7 @@
 
 </div>
 
-## 🎬 Live Application Demonstration
+## Live Application Demonstration
 
 <div align="center">
   <video src="Output_data/Screen_recorded.mp4" controls="controls" width="100%" style="border-radius: 10px; border: 1px solid #374151; box-shadow: 0 8px 24px rgba(0,0,0,0.5);">
@@ -31,7 +31,7 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
 - [1. Executive Overview](#1-executive-overview)
 - [2. System Architecture & Engineering Design](#2-system-architecture--engineering-design)
@@ -69,7 +69,7 @@ The application follows a strictly decoupled Model-View-Controller (MVC) archite
 
 ```mermaid
 graph TD
-    subgraph UI_Presentation ["🖥️ UI Presentation Layer (Tkinter / ttk)"]
+    subgraph UI_Presentation ["UI Presentation Layer (Tkinter / ttk)"]
         MW[MainWindow Coordinator]
         TB[Top Toolbar]
         CP[Controls Panel & Reactive Sliders]
@@ -78,19 +78,19 @@ graph TD
         SB[Status Bar - Metrics & Badges]
     end
 
-    subgraph Pipeline_Coordinator ["⚙️ Pipeline & State Management Layer"]
+    subgraph Pipeline_Coordinator ["Pipeline & State Management Layer"]
         PP[ProcessingPipeline State Controller]
         ET[ExecutionTimer Context Manager]
         PI[Pixel Inspector Coordinate Mapper]
     end
 
-    subgraph Vision_Core ["🔬 Pure Computer Vision Core (OpenCV / NumPy)"]
+    subgraph Vision_Core ["Pure Computer Vision Core (OpenCV / NumPy)"]
         IP_MOD[image_processing.py<br/>Filters, Transforms, Edges, Morphology]
         CA_MOD[contour_analysis.py<br/>Contours, Moments, Bounding Boxes, Metrics]
         IO_MOD[image_io.py<br/>Unicode-Safe Buffer Decoding & Encoding]
     end
 
-    subgraph Data_Storage ["💾 Filesystem & Output"]
+    subgraph Data_Storage ["Filesystem & Output"]
         FS_IN[(Input Images: PNG, JPEG, BMP, TIFF)]
         FS_OUT[(Processed Images & CSV Spreadsheets)]
     end
